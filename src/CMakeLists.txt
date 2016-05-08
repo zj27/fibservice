@@ -1,0 +1,17 @@
+INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../include)
+
+LINK_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../lib)
+
+SET(SRC_LIST fibservice.cpp
+    fibs.cpp
+    )
+
+SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O2" )
+
+ADD_EXECUTABLE(fibservice ${SRC_LIST})
+
+TARGET_LINK_LIBRARIES(fibservice restbed jsoncpp)
+
+INSTALL(TARGETS fibservice
+    RUNTIME DESTINATION bin )
+
