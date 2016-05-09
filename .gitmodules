@@ -1,0 +1,6 @@
+[submodule "deps/restbed"]
+	path = deps/restbed
+	url = https://github.com/Corvusoft/restbed.git
+[submodule "deps/jsoncpp"]
+	path = deps/jsoncpp
+	url = https://github.com/open-source-parsers/jsoncpp.git

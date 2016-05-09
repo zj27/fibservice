@@ -6,8 +6,3 @@ ADD_SUBDIRECTORY(src bin)
 
 SET(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/dist)
 
-INSTALL(FILES lib/librestbed.so
-    DESTINATION lib )
-
-INSTALL(FILES lib/libjsoncpp.so
-    DESTINATION lib )
