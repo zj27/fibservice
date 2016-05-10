@@ -3,6 +3,7 @@
 #include <restbed>
 #include <sstream>
 
+#include "fibservice.h"
 #include "fibgenerator.h"
 
 using namespace std;
@@ -19,7 +20,7 @@ void get_method_handler( const shared_ptr< Session > session )
 
     if(num == 0 || num > MAX_NUM)
     {
-        session->close(404, "Bad request num");
+        session->close(400, "Bad request num");
         return;
     }
 
@@ -27,7 +28,7 @@ void get_method_handler( const shared_ptr< Session > session )
     session->close(OK, ret);
 }
 
-void start_service()
+void start_service(Service &service)
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "/fibonacci" );
@@ -38,8 +39,14 @@ void start_service()
     settings->set_worker_limit( 4 );
     settings->set_default_header( "Connection", "close" );
 
-    Service service;
     service.publish( resource );
     service.start( settings );
 
 }
+
+void start_fibservice()
+{
+    Service service;
+    start_service(service);
+}
+
