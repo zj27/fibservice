@@ -1,8 +1,33 @@
-project( "fibservice" )
+PROJECT( "fibservice" )
 
-cmake_minimum_required( VERSION 2.8.10 )
+CMAKE_MINIMUM_REQUIRED( VERSION 2.8.10 )
+
+#
+# Build Options
+#
+
+OPTION( BUILD_TESTS "Build all available test suites." ON )
+
+#
+# Configuration
+#
+
+SET( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/modules" )
+SET( INCLUDE_DIR "${CMAKE_SOURCE_DIR}/src" )
+INCLUDE_DIRECTORIES( ${INCLUDE_DIR} )
+
+#
+# Build
+#
 
 ADD_SUBDIRECTORY(src bin)
 
-SET(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/dist)
+IF ( BUILD_TESTS )
 
+    FIND_PACKAGE( catch REQUIRED)
+
+    ADD_SUBDIRECTORY(test test)
+
+ENDIF()
+
+SET(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/dist)
