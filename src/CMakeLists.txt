@@ -3,7 +3,8 @@
 #LINK_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../lib)
 
 SET(SRC_LIST fibservice.cpp
-    fibs.cpp
+    fibgenerator.cpp
+    main.cpp
     )
 
 SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O2" )

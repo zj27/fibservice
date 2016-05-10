@@ -1,8 +1,13 @@
 #include "json/json.h"
-#include "fibs.h"
+#include "fibgenerator.h"
 
-std::string generate_fibnum_json(int num)
+std::string generate_fibnum_json(const unsigned int num)
 {
+    if(num > MAX_NUM)
+    {
+        return "";
+    }
+
     Json::Value fibArray;
 
     fibArray.resize(num);

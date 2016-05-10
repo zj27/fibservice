@@ -3,22 +3,21 @@
 #include <restbed>
 #include <sstream>
 
-#include "fibs.h"
+#include "fibgenerator.h"
 
 using namespace std;
 using namespace restbed;
 
-const int max_num = 94;
 
 void get_method_handler( const shared_ptr< Session > session )
 {
     const auto request = session->get_request( );
 
-    int num = 0;
+    unsigned int num = 0;
  
-    request->get_query_parameter("num", num, -1);
+    request->get_query_parameter("num", num, 0);
 
-    if(num < 0 || num > max_num)
+    if(num == 0 || num > MAX_NUM)
     {
         session->close(404, "Bad request num");
         return;
@@ -28,7 +27,7 @@ void get_method_handler( const shared_ptr< Session > session )
     session->close(OK, ret);
 }
 
-int main( const int, const char** )
+void start_service()
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "/fibonacci" );
@@ -43,5 +42,4 @@ int main( const int, const char** )
     service.publish( resource );
     service.start( settings );
 
-    return EXIT_SUCCESS;
 }
