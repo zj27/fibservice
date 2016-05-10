@@ -1,18 +1,12 @@
-#INCLUDE_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../include)
-
-#LINK_DIRECTORIES(${CMAKE_CURRENT_SOURCE_DIR}/../lib)
-
-SET(SRC_LIST fibservice.cpp
-    fibgenerator.cpp
-    main.cpp
-    )
 
 SET( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -O2" )
 
-ADD_EXECUTABLE(fibservice ${SRC_LIST})
+ADD_LIBRARY(fibservice OBJECT fibgenerator.cpp fibservice.cpp)
 
-TARGET_LINK_LIBRARIES(fibservice restbed jsoncpp)
+ADD_EXECUTABLE(fibserver main.cpp $<TARGET_OBJECTS:fibservice>)
 
-INSTALL(TARGETS fibservice
+TARGET_LINK_LIBRARIES(fibserver restbed jsoncpp)
+
+INSTALL(TARGETS fibserver
     RUNTIME DESTINATION bin )
 
