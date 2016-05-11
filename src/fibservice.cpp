@@ -9,7 +9,6 @@
 using namespace std;
 using namespace restbed;
 
-
 void get_method_handler( const shared_ptr< Session > session )
 {
     const auto request = session->get_request( );
@@ -18,7 +17,7 @@ void get_method_handler( const shared_ptr< Session > session )
  
     request->get_query_parameter("num", num, 0);
 
-    if(num == 0 || num > MAX_NUM)
+    if(num == 0 || num > max_num)
     {
         session->close(400, "Bad request num");
         return;
@@ -28,15 +27,17 @@ void get_method_handler( const shared_ptr< Session > session )
     session->close(OK, ret);
 }
 
-void start_service(Service &service)
+void start_service(Service &service,
+                   const unsigned int port, 
+                   const unsigned int thread_num)
 {
     auto resource = make_shared< Resource >( );
     resource->set_path( "/fibonacci" );
     resource->set_method_handler( "GET", get_method_handler );
 
     auto settings = make_shared< Settings >( );
-    settings->set_port( 1984 );
-    settings->set_worker_limit( 4 );
+    settings->set_port(port);
+    settings->set_worker_limit(thread_num);
     settings->set_default_header( "Connection", "close" );
 
     service.publish( resource );
@@ -44,9 +45,10 @@ void start_service(Service &service)
 
 }
 
-void start_fibservice()
+void start_fibservice(const unsigned int port, 
+                      const unsigned int thread_num)
 {
     Service service;
-    start_service(service);
+    start_service(service, port, thread_num);
 }
 

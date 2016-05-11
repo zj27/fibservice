@@ -3,7 +3,7 @@
 
 std::string generate_fibnum_json(const unsigned int num)
 {
-    if(num == 0 || num > MAX_NUM)
+    if(num == 0 || num > max_num)
     {
         return "";
     }

@@ -60,7 +60,7 @@ TEST_CASE( "generate fibonacci numbers", "[generate_fibnum_json]" )
 
     REQUIRE( verify_fibonacci(generate_fibnum_json(10)));
 
-    REQUIRE( verify_fibonacci(generate_fibnum_json(MAX_NUM)));
+    REQUIRE( verify_fibonacci(generate_fibnum_json(max_num)));
 
     // Negative test
 
@@ -68,6 +68,6 @@ TEST_CASE( "generate fibonacci numbers", "[generate_fibnum_json]" )
 
     REQUIRE( generate_fibnum_json(0) == "");
 
-    REQUIRE( generate_fibnum_json(MAX_NUM + 1) == "");
+    REQUIRE( generate_fibnum_json(max_num + 1) == "");
 
 }

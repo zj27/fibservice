@@ -3,7 +3,9 @@
 
 using namespace restbed;
 
-extern void start_service(Service &service);
+extern void start_service(Service &service, 
+                          const unsigned int port, 
+                          const unsigned int thread_num);
 
 
 TEST_CASE("start service", "[start_service]")
@@ -14,6 +16,6 @@ TEST_CASE("start service", "[start_service]")
         service.stop();
     } );
 
-    REQUIRE_NOTHROW(start_service(service));
+    REQUIRE_NOTHROW(start_service(service, 1984, 4));
 }
 

@@ -14,7 +14,9 @@ using std::string;
 
 using namespace restbed;
 
-extern void start_service(Service &service);
+extern void start_service(Service &service, 
+                          const unsigned int port, 
+                          const unsigned int thread_num);
 
 void verify_request(const string & url, const string & method, const unsigned int expected_status_code)
 {
@@ -66,7 +68,7 @@ TEST_CASE("Verify REST request", "[Rest Request]")
         } );
     } );
 
-    start_service(service);
+    start_service(service, 1984, 4);
     worker->join();
 }
 
