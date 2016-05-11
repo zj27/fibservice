@@ -16,6 +16,6 @@ TEST_CASE("start service", "[start_service]")
         service.stop();
     } );
 
-    REQUIRE_NOTHROW(start_service(service, 1984, 4));
+    REQUIRE_NOTHROW(start_service(service, 1984, 1));
 }
 

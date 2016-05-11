@@ -1,10 +1,13 @@
-#ifndef FIB_SERVICE_H
-#define FIB_SERVICE_H 
+#ifndef __FIB_SERVICE_H__
+#define __FIB_SERVICE_H__
 
 const unsigned int default_port = 1984;
 const unsigned int default_thread_num = 5; 
 
+/*
+ *  Start the service with given port and thread num
+ */
 void start_fibservice(const unsigned int port = default_port, 
                       const unsigned int thread_num = default_thread_num);
 
-#endif
+#endif //__FIB_SERVICE_H__
