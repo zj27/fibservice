@@ -36,3 +36,7 @@ Send GET request to get fibonacci numbers:
 curl http://localhost:1984/fibonacci?num=5
 [ 0, 1, 1, 2, 3 ]
 ```
+# Documentation
+[Design Doc](docs/design.md)
+
+[Test Doc](docs/test.md)
