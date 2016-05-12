@@ -6,6 +6,7 @@
 
 const unsigned int max_port = 65535;
 const unsigned int min_port = 1025;
+const unsigned int max_threads = 100;
 
 void usage(const char * program_name)
 {
@@ -38,14 +39,18 @@ int main(int argc, char** argv)
                 if(port < min_port || port > max_port)
                 {
                     std::cerr << "Invalid port " << optarg << std::endl;
+                    std::cerr << "The port should between " << min_port \
+                              << " and " << max_port << std::endl;
                     return 1;
                 }
                 break;
             case 't':
                 thread_num = atoi(optarg);
-                if(thread_num == 0)
+                if(thread_num == 0 || thread_num > max_threads)
                 {
                     std::cerr << "Invalid thread number " << optarg << std::endl;
+                    std::cerr << "The thread number should between 1 and " \
+                              << max_threads << std::endl;
                     return 1;
                 }
                 break;

@@ -21,14 +21,14 @@ INCLUDE_DIRECTORIES( ${CMAKE_CURRENT_SOURCE_DIR} )
 
 ADD_LIBRARY(test_util OBJECT test_util.cpp)
 
-ADD_EXECUTABLE( fibgenerator_test_suite ${UNIT_TEST_SOURCE_DIR}/fibgenerator_test_suite.cpp $<TARGET_OBJECTS:fibservice> $<TARGET_OBJECTS:test_util> ) 
+ADD_EXECUTABLE( fibgenerator_test_suite ${UNIT_TEST_SOURCE_DIR}/fibgenerator_test_suite.cpp $<TARGET_OBJECTS:fibsvc> $<TARGET_OBJECTS:test_util> ) 
 TARGET_LINK_LIBRARIES(fibgenerator_test_suite restbed jsoncpp)
 ADD_TEST( fibgenerator_test_suite ${EXECUTABLE_OUTPUT_PATH}/fibgenerator_test_suite )
 
-ADD_EXECUTABLE( fibservice_test_suite ${UNIT_TEST_SOURCE_DIR}/fibservice_test_suite.cpp $<TARGET_OBJECTS:fibservice>) 
+ADD_EXECUTABLE( fibservice_test_suite ${UNIT_TEST_SOURCE_DIR}/fibservice_test_suite.cpp $<TARGET_OBJECTS:fibsvc>) 
 TARGET_LINK_LIBRARIES(fibservice_test_suite restbed jsoncpp)
 ADD_TEST( fibservice_test_suite ${EXECUTABLE_OUTPUT_PATH}/fibservice_test_suite )
 
-ADD_EXECUTABLE( rest_test_suite ${FUNC_TEST_SOURCE_DIR}/rest_test_suite.cpp $<TARGET_OBJECTS:fibservice> $<TARGET_OBJECTS:test_util>) 
+ADD_EXECUTABLE( rest_test_suite ${FUNC_TEST_SOURCE_DIR}/rest_test_suite.cpp $<TARGET_OBJECTS:fibsvc> $<TARGET_OBJECTS:test_util>) 
 TARGET_LINK_LIBRARIES(rest_test_suite restbed jsoncpp pthread)
 ADD_TEST( rest_test_suite ${EXECUTABLE_OUTPUT_PATH}/rest_test_suite )
