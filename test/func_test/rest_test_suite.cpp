@@ -2,9 +2,6 @@
 #include <string>
 #include <map>
 #include <memory>
-#include <ciso646>
-#include <stdexcept>
-#include <functional>
 
 #include <restbed>
 #include <catch.hpp>
