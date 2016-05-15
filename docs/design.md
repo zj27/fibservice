@@ -37,5 +37,6 @@ The project is target to implement a web service which support a REST GET call. 
 Because of limited schedule and resource, some potential improvements not implemented yet are recorded as follow: 
 ### Deployment by Docker
 * The service has dependencies on several external libraries, which makes the deployment a little complicated. Container may be leveraged for a quick and simple deployment. All the dependencies could be installed in the container by being specified in the dockerfile. The web service could be built, tested and run in the container.
+
 ### Cache
 * The current restbed framework doesn't provide the cache feature. To implement a effecient cache, the cache should store the longest Fibonacci list that have ever queried. If the later request need a shorter list, then directly return from cache. Otherwise, continue the calculation based the list from cache and generate the longer list, and then extend the cache.
