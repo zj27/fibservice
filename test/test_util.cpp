@@ -2,16 +2,20 @@
 #include <iostream>
 #include <json/json.h>
 
+using std::cerr;
+using std::endl;
+using std::string;
+
 /*
  *  verify the fibonacci number string
  */
-bool verify_fibonacci(const std::string & fib_str) {
+bool verify_fibonacci(const string & fib_str) {
     Json::Reader reader;
     Json::Value root;
 
     // Parse the fibonacci string which should be in json format
     if (!reader.parse(fib_str, root)) {
-        std::cerr << "Failed to parse fib str: " << fib_str << std::endl;
+        cerr << "Failed to parse fib str: " << fib_str << endl;
         return false;
     }
 
@@ -25,7 +29,7 @@ bool verify_fibonacci(const std::string & fib_str) {
         }
     } else {
         if (root[0] != 0 || root[1] != 1) {
-            std::cerr << "Invalid fib str: " << fib_str << std::endl;
+            cerr << "Invalid fib str: " << fib_str << endl;
             return false;
         }
         uint64_t a = 0, b = 1, c = 0;
@@ -34,7 +38,7 @@ bool verify_fibonacci(const std::string & fib_str) {
             a = b;
             b = c;
             if (root[i].asUInt64() != c) {
-                std::cerr << "Invalid fib str: " << fib_str << std::endl;
+                cerr << "Invalid fib str: " << fib_str << endl;
                 return false;
             }
         }
