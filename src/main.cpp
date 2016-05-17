@@ -4,53 +4,47 @@
 
 #include "fibservice.h"
 
+using std::cerr;
+using std::endl;
+
 const unsigned int max_port = 65535;
 const unsigned int min_port = 1025;
 const unsigned int max_threads = 100;
 
-void usage(const char * program_name)
-{
-   std::cerr
-      << "\n"
-      << "usage: " << program_name << " [options] \n"
-      << "\n"
-      << "options:\n"
-      << "   -h               = print usage\n"
-      << "   -p <port>        = specify the service port\n"
-      << "   -t <thread_num>  = specify the thread number\n";
+void usage(const char * program_name) {
+    cerr
+        << "\n"
+        << "usage: " << program_name << " [options] \n"
+        << "\n"
+        << "options:\n"
+        << "   -h               = print usage\n"
+        << "   -p <port>        = specify the service port\n"
+        << "   -t <thread_num>  = specify the thread number\n";
 }
 
-int main(int argc, char** argv)
-{
-    unsigned int port = 1984;
-    unsigned int thread_num = 4;
-    bool runAsDaemon = false;
+int main(int argc, char** argv) {
+    unsigned int port = default_port;
+    unsigned int thread_num = default_thread_num;
     int opt;
     extern char* optarg;
-    while((opt = getopt(argc, argv, "hdp:t:")) > 0)
-    {
-        switch(opt)
-        {
-            case 'd':
-                runAsDaemon = true;
-                break;
+    while ((opt = getopt(argc, argv, "hp:t:")) > 0) {
+        switch (opt) {
             case 'p':
                 port = atoi(optarg);
-                if(port < min_port || port > max_port)
-                {
-                    std::cerr << "Invalid port " << optarg << std::endl;
-                    std::cerr << "The port should between " << min_port \
-                              << " and " << max_port << std::endl;
+                if (port < min_port || port > max_port) {
+                    cerr << "Invalid port " << optarg << endl;
+                    cerr << "The port should between " << min_port \
+                              << " and " << max_port << endl;
                     return 1;
                 }
                 break;
             case 't':
                 thread_num = atoi(optarg);
-                if(thread_num == 0 || thread_num > max_threads)
-                {
-                    std::cerr << "Invalid thread number " << optarg << std::endl;
-                    std::cerr << "The thread number should between 1 and " \
-                              << max_threads << std::endl;
+                if (thread_num == 0 || thread_num > max_threads) {
+                    cerr << "Invalid thread number "
+                              << optarg << endl;
+                    cerr << "The thread number should between 1 and " \
+                              << max_threads << endl;
                     return 1;
                 }
                 break;

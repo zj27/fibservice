@@ -1,8 +1,8 @@
-#ifndef __TEST_UTIL_H__
-#define __TEST_UTIL_H__
+#ifndef TEST_TEST_UTIL_H_
+#define TEST_TEST_UTIL_H_
 
 #include <string>
 
 bool verify_fibonacci(const std::string & fib_str);
 
-#endif //__TEST_UTIL_H__
+#endif  // TEST_TEST_UTIL_H_

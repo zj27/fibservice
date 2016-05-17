@@ -1,5 +1,5 @@
-#ifndef __FIB_GENERATOR_H__
-#define __FIB_GENERATOR_H__
+#ifndef SRC_FIBGENERATOR_H_
+#define SRC_FIBGENERATOR_H_
 
 #include <string>
 
@@ -10,4 +10,4 @@ const unsigned int max_num = 94;
  */
 std::string generate_fibnum_json(const unsigned int num);
 
-#endif //__FIB_GENERATOR_H__
+#endif  // SRC_FIBGENERATOR_H_
