@@ -7,7 +7,7 @@
 
 #include <restbed>
 
-#include "fibgenerator.h"
+#include "fibnumbers.h"
 
 using std::string;
 using std::shared_ptr;
@@ -19,10 +19,29 @@ using restbed::Service;
 using restbed::Resource;
 using restbed::Settings;
 
+using fibservice::FibNumbers;
+
+
+namespace fibservice {
+
+FibService::FibService(const unsigned int port, 
+                       const unsigned int threads) : 
+                       m_port(port), m_threads(threads) {
+
+    m_service = make_shared< Service >();
+}
+
+FibService::FibService(const unsigned int port, 
+                       const unsigned int threads,
+                       const shared_ptr< Service >& service) :
+                       m_port(port), m_threads(threads), m_service(service) {
+
+}
+
 /*
  *  Handler for get method
  */
-void get_method_handler(const shared_ptr< Session > session) {
+void FibService::get_method_handler(const shared_ptr< Session > session) {
     const auto request = session->get_request();
     unsigned int num = 0;
     ostringstream oss;
@@ -31,13 +50,17 @@ void get_method_handler(const shared_ptr< Session > session) {
 
 
     // Bad request when num is out of range
-    if (num == 0 || num > max_num) {
-        oss << "The fibonacci list number must between 0 and " << (max_num + 1);
-        session->close(400, oss.str());
+    if (num == 0) {
+        session->close(400);
         return;
     }
 
-    string ret = generate_fibnum_json(num);
+//    string ret = generate_fibnum_json(num);
+
+    FibNumbers fib_nums;
+    fib_nums.generate(num);
+    string ret;
+    fib_nums.GetJsonString(&ret);
 
     oss.clear();
     oss.str("");
@@ -51,29 +74,26 @@ void get_method_handler(const shared_ptr< Session > session) {
  *   The purpose of this function is mainly for automation test.
  *   Caller could inject a service with customized ready handler.
  */
-void start_service(const shared_ptr< Service >& service,
-                   const unsigned int port,
-                   const unsigned int thread_num) {
+void FibService::start() {
+
     // Register GET handler for fibonacci
     auto resource = make_shared< Resource >();
     resource->set_path("/fibonacci");
     resource->set_method_handler("GET", get_method_handler);
 
     auto settings = make_shared< Settings >();
-    settings->set_port(port);
-    settings->set_worker_limit(thread_num);
+    settings->set_port(m_port);
+    settings->set_worker_limit(m_threads);
     settings->set_default_header("Connection", "close");
 
-    service->publish(resource);
-    service->start(settings);
+    m_service->publish(resource);
+    m_service->start(settings);
 }
 
-/*
- *  Start the service with a pure Service instance.
- */
-void start_fibservice(const unsigned int port,
-                      const unsigned int thread_num) {
-    auto service = make_shared< Service >();
-    start_service(service, port, thread_num);
+void FibService::stop() {
+
+   m_service->stop();
+
 }
 
+}

@@ -1,11 +1,13 @@
 #include <unistd.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <iostream>
 
 #include "fibservice.h"
 
 using std::cerr;
 using std::endl;
+
+using fibservice::FibService;
 
 const unsigned int max_port = 65535;
 const unsigned int min_port = 1025;
@@ -23,8 +25,8 @@ void usage(const char * program_name) {
 }
 
 int main(int argc, char** argv) {
-    unsigned int port = default_port;
-    unsigned int thread_num = default_thread_num;
+    unsigned int port = 1984;
+    unsigned int thread_num = 5;
     int opt;
     extern char* optarg;
     while ((opt = getopt(argc, argv, "hp:t:")) > 0) {
@@ -54,6 +56,8 @@ int main(int argc, char** argv) {
                 return 1;
         }
     }
-    start_fibservice(port, thread_num);
+
+    FibService fibservice(port, thread_num);
+    fibservice.start(); 
     return 0;
 }
