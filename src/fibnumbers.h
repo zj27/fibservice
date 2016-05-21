@@ -2,10 +2,10 @@
 #define SRC_FIBNUMBERS_H_
 
 #include <string>
-#include <vector>
+
+#include "json/json.h"
 
 using std::string;
-using std::vector;
 
 namespace fibservice {
 
@@ -30,14 +30,16 @@ class FibNumbers {
 
         FibNumbersErrors generate(const unsigned int num);
 
-        FibNumbersErrors GetJsonString(string * const fib_str);
+        string toJsonString();
 
-        vector<uint64_t> getNumberArray() { return fib_array;} ;
+        Json::Value getNumberArray() { return fib_array;} ;
 
     private:
         static const unsigned int kFibMaxLength;
 
-        vector<uint64_t> fib_array;
+        // Directly use Json::Value to store the fibonacci numbers
+        // as it works like vector and easy to extend.
+        Json::Value fib_array;
 
 };
 

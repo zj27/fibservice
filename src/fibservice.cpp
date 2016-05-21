@@ -59,8 +59,7 @@ void FibService::get_method_handler(const shared_ptr< Session > session) {
 
     FibNumbers fib_nums;
     fib_nums.generate(num);
-    string ret;
-    fib_nums.GetJsonString(&ret);
+    string ret = fib_nums.toJsonString();
 
     oss.clear();
     oss.str("");
