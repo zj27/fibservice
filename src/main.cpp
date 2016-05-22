@@ -33,7 +33,8 @@ int main(int argc, char** argv) {
     try {
         po::store(po::parse_command_line(argc, argv, desc), vm);
     }
-    catch (po::unknown_option &) {
+    catch (...) {
+        // unknown_option, invalid_option_value, etc.
         cerr << desc << endl;
         return 1;
     }
