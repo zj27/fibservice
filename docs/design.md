@@ -32,6 +32,7 @@ The project is target to implement a web service which support a REST GET call. 
   * The handler will get and check the "length", and return the fibonacci numbers in json format.
   * Leverages FibNumbers to generate the fibonacci numbers.
   * Respond 200 with fibonacci numbers. Respond 400 for invalid or outofrange length. Respond 500 for other internal error.
+  * The max length is 94 because of the limitation of C++ integer. To support larger number, a customerized data structure is required.
 
 #### main
 * The entry of the program. 
