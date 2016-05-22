@@ -53,7 +53,7 @@ FibNumbersErrors FibNumbers::generate(const unsigned int fib_len) {
         // init the second number 1
         fib_array[1] = 1;
         // if fib_len > 2, loop to caculate the rest
-        for (int i = 2; i != fib_len; i++) {
+        for (int i = 2; i < fib_len; ++i) {
             // Json::Value leverages union to store data of different type
             fib_array[i] = fib_array[i-1].asUInt64() 
                            + fib_array[i-2].asUInt64();
