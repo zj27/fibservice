@@ -31,6 +31,7 @@ The project is target to implement a web service which support a REST GET call. 
 * Register GET handler for /fibonacci
   * The handler will get and check the "length", and return the fibonacci numbers in json format.
   * Leverages FibNumbers to generate the fibonacci numbers.
+  * Respond 200 with fibonacci numbers. Respond 400 for invalid or outofrange length. Respond 500 for other internal error.
 
 #### main
 * The entry of the program. 
