@@ -9,6 +9,7 @@ A simple web service for Fibonacci numbers
 # Dependency
 For build and deployment
 * C++11
+* Boost(program options 1.61.0 or above)
 * Linux OS
 * [restbed](https://github.com/Corvusoft/restbed)(4.0 or above)
 * [jsoncpp](https://github.com/open-source-parsers/jsoncpp)(1.7.2 or above)
@@ -33,7 +34,7 @@ fibservice [-p <port>] [-t <thread_num>]
 ```
 Send GET request to get fibonacci numbers:
 ```
-curl http://localhost:1984/fibonacci?num=5
+curl http://localhost:1984/fibonacci?length=5
 [ 0, 1, 1, 2, 3 ]
 ```
 # Documentation
