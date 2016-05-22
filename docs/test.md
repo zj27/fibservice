@@ -21,7 +21,7 @@ Verify if the fibservice could be start without exception.
     * Make sure there is no exception
 
 Verify the class basic functions
-    * Make sure get/set works correctly 
+   * Make sure get/set works correctly 
 
 ## Functional test:
 ### Verify the Restful request
