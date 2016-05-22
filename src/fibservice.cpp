@@ -7,7 +7,7 @@
 
 #include <restbed>
 
-#include "fibgenerator.h"
+#include "fibnumbers.h"
 
 using std::string;
 using std::shared_ptr;
@@ -19,61 +19,87 @@ using restbed::Service;
 using restbed::Resource;
 using restbed::Settings;
 
-/*
- *  Handler for get method
- */
-void get_method_handler(const shared_ptr< Session > session) {
-    const auto request = session->get_request();
-    unsigned int num = 0;
-    ostringstream oss;
+using fibservice::FibNumbers;
+using fibservice::kOK;
+using fibservice::kInvalidInput;
+using fibservice::kOutOfRange;
 
-    request->get_query_parameter("num", num, 0);
+namespace fibservice {
 
+FibService::FibService(const unsigned int port,
+                       const unsigned int threads) :
+                       m_port(port), m_threads(threads) {
+    m_service = make_shared< Service >();
+}
 
-    // Bad request when num is out of range
-    if (num == 0 || num > max_num) {
-        oss << "The fibonacci list number must between 0 and " << (max_num + 1);
-        session->close(400, oss.str());
-        return;
-    }
-
-    string ret = generate_fibnum_json(num);
-
-    oss.clear();
-    oss.str("");
-    oss << ret.length();
-    string ret_len_str = oss.str();
-
-    session->close(200, ret, { {"Content-Length", ret_len_str } });
+FibService::FibService(const unsigned int port,
+                       const unsigned int threads,
+                       const shared_ptr< Service >& service) :
+                       m_port(port), m_threads(threads), m_service(service) {
 }
 
 /*
- *   The purpose of this function is mainly for automation test.
- *   Caller could inject a service with customized ready handler.
+ *  Handler for get method
  */
-void start_service(const shared_ptr< Service >& service,
-                   const unsigned int port,
-                   const unsigned int thread_num) {
+void FibService::get_method_handler(const shared_ptr< Session > session) {
+    const auto request = session->get_request();
+    unsigned int length = 0;
+
+    request->get_query_parameter("length", length, 0);
+
+
+    // Bad request when num is invalid
+    // Include 0, negative numbers, bad url, etc.
+    if (length == 0) {
+        session->close(400, "The fibonaaci length is invalid");
+        return;
+    }
+
+    ostringstream oss;
+    FibNumbers fibnumbers;
+    switch (fibnumbers.generate(length)) {
+    case kOK:
+        // do nothing
+        break;
+    case kInvalidInput:
+    case kOutOfRange:
+        // return 400 when the input is invalid or out of range
+        oss << "The fibonaaci length is either invalid or out of range. "
+            << "Max length is " << FibNumbers::kFibMaxLength;
+        session->close(400, oss.str());
+        return;
+    default:
+        // return 500 for other kinds of error
+        session->close(500, "Failed to generate fibonaaci numbers");
+        return;
+    }
+
+    string fib_str = fibnumbers.toJsonString();
+
+    oss << fib_str.length();
+    string content_len_str = oss.str();
+
+    session->close(200, fib_str, { {"Content-Length", content_len_str } });
+}
+
+void FibService::start() {
     // Register GET handler for fibonacci
     auto resource = make_shared< Resource >();
     resource->set_path("/fibonacci");
     resource->set_method_handler("GET", get_method_handler);
 
+    // Set port, threads, and default header
     auto settings = make_shared< Settings >();
-    settings->set_port(port);
-    settings->set_worker_limit(thread_num);
+    settings->set_port(m_port);
+    settings->set_worker_limit(m_threads);
     settings->set_default_header("Connection", "close");
 
-    service->publish(resource);
-    service->start(settings);
+    m_service->publish(resource);
+    m_service->start(settings);
 }
 
-/*
- *  Start the service with a pure Service instance.
- */
-void start_fibservice(const unsigned int port,
-                      const unsigned int thread_num) {
-    auto service = make_shared< Service >();
-    start_service(service, port, thread_num);
+void FibService::stop() {
+    m_service->stop();
 }
 
+}  // namespace fibservice

@@ -1,59 +1,75 @@
-#include <unistd.h>
-#include <stdlib.h>
+#include <cstdlib>
 #include <iostream>
+
+#include <boost/program_options.hpp>
 
 #include "fibservice.h"
 
+using std::cout;
 using std::cerr;
 using std::endl;
 
-const unsigned int max_port = 65535;
-const unsigned int min_port = 1025;
-const unsigned int max_threads = 100;
+namespace po = boost::program_options;
 
-void usage(const char * program_name) {
-    cerr
-        << "\n"
-        << "usage: " << program_name << " [options] \n"
-        << "\n"
-        << "options:\n"
-        << "   -h               = print usage\n"
-        << "   -p <port>        = specify the service port\n"
-        << "   -t <thread_num>  = specify the thread number\n";
-}
+using fibservice::FibService;
+
+const unsigned int kMaxPort = 65535;
+const unsigned int kMinPort = 1025;
+const unsigned int kMaxThreads = 100;
+const unsigned int kDefaultPort = 1984;
+const unsigned int kDefaultThreads = 5;
 
 int main(int argc, char** argv) {
-    unsigned int port = default_port;
-    unsigned int thread_num = default_thread_num;
-    int opt;
-    extern char* optarg;
-    while ((opt = getopt(argc, argv, "hp:t:")) > 0) {
-        switch (opt) {
-            case 'p':
-                port = atoi(optarg);
-                if (port < min_port || port > max_port) {
-                    cerr << "Invalid port " << optarg << endl;
-                    cerr << "The port should between " << min_port \
-                              << " and " << max_port << endl;
-                    return 1;
-                }
-                break;
-            case 't':
-                thread_num = atoi(optarg);
-                if (thread_num == 0 || thread_num > max_threads) {
-                    cerr << "Invalid thread number "
-                              << optarg << endl;
-                    cerr << "The thread number should between 1 and " \
-                              << max_threads << endl;
-                    return 1;
-                }
-                break;
-            case 'h':
-            default:
-                usage(argv[0]);
-                return 1;
+    unsigned int port = kDefaultPort;
+    unsigned int threads = kDefaultThreads;
+
+    po::options_description desc("General options");
+    desc.add_options()
+        ("help,h", "produce help message")
+        ("port,p", po::value<unsigned int>(), "set service port")
+        ("threads,t", po::value<unsigned int>(), "set service thread number");
+
+    po::variables_map vm;
+    try {
+        po::store(po::parse_command_line(argc, argv, desc), vm);
+    }
+    catch (...) {
+        // unknown_option, invalid_option_value, etc.
+        cerr << desc << endl;
+        return 1;
+    }
+
+    po::notify(vm);
+
+    if (vm.count("help")) {
+        cout << desc << endl;
+        return 0;
+    }
+
+    if (vm.count("port")) {
+        port = vm["port"].as<unsigned int>();
+        // Port range check
+        if (port < kMinPort || port > kMaxPort) {
+            cerr << "Invalid port " << port << endl;
+            cerr << "The port should between " << kMinPort \
+                 << " and " << kMaxPort << endl;
+            return 1;
         }
     }
-    start_fibservice(port, thread_num);
+
+    if (vm.count("threads")) {
+        threads = vm["threads"].as<unsigned int>();
+        // Thread number range check
+        if (threads == 0 || threads > kMaxThreads) {
+            cerr << "Invalid thread number "
+                 << threads << endl;
+            cerr << "The thread number should between 1 and " \
+                 << kMaxThreads << endl;
+            return 1;
+        }
+    }
+
+    FibService fibservice(port, threads);
+    fibservice.start();
     return 0;
 }
