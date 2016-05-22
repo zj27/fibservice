@@ -12,35 +12,44 @@ using restbed::Service;
 
 namespace fibservice {
 
+// Class for service to support fibonaaci query
+// Example:
+//     FibService fibservice(1984, 5)
+//     fibservice.start()
 class FibService {
-    public:
-        FibService(const unsigned int port, const unsigned int threads);
+ public:
+     FibService(const unsigned int port, const unsigned int threads);
 
-        FibService(const unsigned int port, const unsigned int threads,
-                   const shared_ptr< Service >& service);
+     // Pass in a customerized service
+     // Mainly for automation test
+     FibService(const unsigned int port, const unsigned int threads,
+                const shared_ptr< Service >& service);
 
-        void start();
+     // Start the service
+     // Block the caller thread until the service is stopped
+     void start();
 
-        void stop();
+     // Stop the service
+     void stop();
 
-        unsigned int get_port() { return m_port; };
+     unsigned int get_port() { return m_port; }
 
-        void set_port(const unsigned int port) { m_port = port; };
+     void set_port(const unsigned int port) { m_port = port; }
 
-        unsigned int get_threads() { return m_threads; };
+     unsigned int get_threads() { return m_threads; }
 
-        void set_threads(const unsigned int threads) { m_threads = threads; };
-          
-    private:
-        static void get_method_handler(const shared_ptr< Session > session);
+     void set_threads(const unsigned int threads) { m_threads = threads; }
 
-        unsigned int m_port;
-        unsigned int m_threads;
+ private:
+     // Handler for GET method
+     static void get_method_handler(const shared_ptr< Session > session);
 
-        shared_ptr< Service > m_service;
+     unsigned int m_port;
+     unsigned int m_threads;
 
+     shared_ptr< Service > m_service;
 };
 
-}
+}  // namespace fibservice
 
 #endif  // SRC_FIBSERVICE_H_

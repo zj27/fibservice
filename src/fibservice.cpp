@@ -26,18 +26,16 @@ using fibservice::kOutOfRange;
 
 namespace fibservice {
 
-FibService::FibService(const unsigned int port, 
-                       const unsigned int threads) : 
+FibService::FibService(const unsigned int port,
+                       const unsigned int threads) :
                        m_port(port), m_threads(threads) {
-
     m_service = make_shared< Service >();
 }
 
-FibService::FibService(const unsigned int port, 
+FibService::FibService(const unsigned int port,
                        const unsigned int threads,
                        const shared_ptr< Service >& service) :
                        m_port(port), m_threads(threads), m_service(service) {
-
 }
 
 /*
@@ -45,55 +43,52 @@ FibService::FibService(const unsigned int port,
  */
 void FibService::get_method_handler(const shared_ptr< Session > session) {
     const auto request = session->get_request();
-    unsigned int num = 0;
-    ostringstream oss;
+    unsigned int length = 0;
 
-    request->get_query_parameter("num", num, 0);
+    request->get_query_parameter("length", length, 0);
 
 
     // Bad request when num is invalid
-    if (num == 0) {
-        session->close(400);
+    // Include 0, negative numbers, bad url, etc.
+    if (length == 0) {
+        session->close(400, "The fibonaaci length is invalid");
         return;
     }
 
-
-    FibNumbers fib_nums;
-    switch (fib_nums.generate(num)) {
+    ostringstream oss;
+    FibNumbers fibnumbers;
+    switch (fibnumbers.generate(length)) {
     case kOK:
         // do nothing
         break;
     case kInvalidInput:
     case kOutOfRange:
-        session->close(400);
+        // return 400 when the input is invalid or out of range
+        oss << "The fibonaaci length is either invalid or out of range. "
+            << "Max length is " << FibNumbers::kFibMaxLength;
+        session->close(400, oss.str());
         return;
     default:
         // return 500 for other kinds of error
-        session->close(500);
+        session->close(500, "Failed to generate fibonaaci numbers");
         return;
     }
 
-    string ret = fib_nums.toJsonString();
+    string fib_str = fibnumbers.toJsonString();
 
-    oss.clear();
-    oss.str("");
-    oss << ret.length();
-    string ret_len_str = oss.str();
+    oss << fib_str.length();
+    string content_len_str = oss.str();
 
-    session->close(200, ret, { {"Content-Length", ret_len_str } });
+    session->close(200, fib_str, { {"Content-Length", content_len_str } });
 }
 
-/*
- *   The purpose of this function is mainly for automation test.
- *   Caller could inject a service with customized ready handler.
- */
 void FibService::start() {
-
     // Register GET handler for fibonacci
     auto resource = make_shared< Resource >();
     resource->set_path("/fibonacci");
     resource->set_method_handler("GET", get_method_handler);
 
+    // Set port, threads, and default header
     auto settings = make_shared< Settings >();
     settings->set_port(m_port);
     settings->set_worker_limit(m_threads);
@@ -104,9 +99,7 @@ void FibService::start() {
 }
 
 void FibService::stop() {
-
-   m_service->stop();
-
+    m_service->stop();
 }
 
-}
+}  // namespace fibservice

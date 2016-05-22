@@ -62,18 +62,19 @@ TEST_CASE("Verify REST request", "[Rest Request]") {
     auto service = make_shared< Service >();
     service->set_ready_handler([&worker](Service & service) {
         worker = make_shared< thread >([ &service ] () {
+            string base_url = "/fibonacci?length=";
             // normal cases
-            verify_request("/fibonacci?num=1", "GET",  200);
-            verify_request("/fibonacci?num=2", "GET", 200);
-            verify_request("/fibonacci?num=3", "GET", 200);
-            verify_request("/fibonacci?num=10", "GET", 200);
-            verify_request("/fibonacci?num=94", "GET", 200);
+            verify_request(base_url + "1", "GET",  200);
+            verify_request(base_url + "2", "GET", 200);
+            verify_request(base_url + "3", "GET", 200);
+            verify_request(base_url + "10", "GET", 200);
+            verify_request(base_url + "94", "GET", 200);
 
             // negative cases - bad request
-            verify_request("/fibonacci?num=0", "GET", 400);
-            verify_request("/fibonacci?num=95", "GET", 400);
-            verify_request("/fibonacci?num=-1", "GET", 400);
-            verify_request("/fibonacci?num=zero", "GET", 400);
+            verify_request(base_url + "0", "GET", 400);
+            verify_request(base_url + "95", "GET", 400);
+            verify_request(base_url + "-1", "GET", 400);
+            verify_request(base_url + "zero", "GET", 400);
             verify_request("/fibonacci", "GET", 400);
 
             // negative cases - resource not found

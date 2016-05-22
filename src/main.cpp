@@ -16,17 +16,18 @@ using fibservice::FibService;
 const unsigned int kMaxPort = 65535;
 const unsigned int kMinPort = 1025;
 const unsigned int kMaxThreads = 100;
+const unsigned int kDefaultPort = 1984;
+const unsigned int kDefaultThreads = 5;
 
 int main(int argc, char** argv) {
-    unsigned int port = 1984;
-    unsigned int threads = 5;
- 
-    po::options_description desc("Allowed options");
+    unsigned int port = kDefaultPort;
+    unsigned int threads = kDefaultThreads;
+
+    po::options_description desc("General options");
     desc.add_options()
         ("help,h", "produce help message")
         ("port,p", po::value<unsigned int>(), "set service port")
-        ("threads,t", po::value<unsigned int>(), "set service thread number")
-    ;
+        ("threads,t", po::value<unsigned int>(), "set service thread number");
 
     po::variables_map vm;
     try {
@@ -46,18 +47,18 @@ int main(int argc, char** argv) {
 
     if (vm.count("port")) {
         port = vm["port"].as<unsigned int>();
+        // Port range check
         if (port < kMinPort || port > kMaxPort) {
             cerr << "Invalid port " << port << endl;
             cerr << "The port should between " << kMinPort \
                  << " and " << kMaxPort << endl;
             return 1;
-
         }
     }
 
-
     if (vm.count("threads")) {
         threads = vm["threads"].as<unsigned int>();
+        // Thread number range check
         if (threads == 0 || threads > kMaxThreads) {
             cerr << "Invalid thread number "
                  << threads << endl;
@@ -68,6 +69,6 @@ int main(int argc, char** argv) {
     }
 
     FibService fibservice(port, threads);
-    fibservice.start(); 
+    fibservice.start();
     return 0;
 }
