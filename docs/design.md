@@ -4,8 +4,8 @@ The project is target to implement a web service which support a REST GET call. 
 
 ## User Cases
 * The web service receives a REST GET request with a positive integer number n. The web service responds with the first n Fibonacci numbers(starting from 0)
-*  The web service receives a REST GET request with a negative number, floating number, or without number. The web service responds with an appropriate error
-*  The web service doesn't respond for other kinds of request
+* The web service receives a REST GET request with a negative number, floating number, or without number. The web service responds with an appropriate error
+* The web service doesn't respond for other kinds of request
 
 ## Implementation Specification
 ### External Library
@@ -15,23 +15,27 @@ The project is target to implement a web service which support a REST GET call. 
   * Casablanca: asynchronous HTTP client and listener
   * Simple C++ REST library: Very simple and self documenting library for creating a REST API in your c++ application.
 * The gSOAP looks too heavy, the Casabalanca focus on client and windows, and Simple C++ REST library looks too simple.
-* Restbed is chosen for this project as it exactly meets the requirement and provides necesssary features.
+* Restbed is chosen for this project as it exactly meets the requirement and provides necesssary features. It follows Proactor pattern of I/O multiplexing, but simulate that by select/epoll on Linux. So it supports high concurrency.
 * Jsoncpp is chosen for json data generating and parsing.
+* Boost::program_options is chosen for parsing the options.
 
 ### Source Introduction
+
+#### FibNumbers
+* Class to generate fibonacci numbers with specified length.
+* Support string in json format. Could extend for other format in the future.
+* Internally use Json::Value to directly store each fibonacci number because it use union to store data and works very like vector. It would be easy for further extension like transfer to other format or store in cache.
+
+#### FibService
+* Class to leverage restbed to setup the web service.
+* Register GET handler for /fibonacci
+  * The handler will get and check the "length", and return the fibonacci numbers in json format.
+  * Leverages FibNumbers to generate the fibonacci numbers.
+
 #### main
 * The entry of the program. 
 * Parse and check the option for port and thread numbers. 
-* Start the service.
-
-#### fibservice
-* Leverage restbed to setup the web service.
-* Register GET handler for /fibonacci
-  * The handler will get and check the "num", and return the fibonaaci numbers in json format. 
-
-#### fibgenerator
-* generate the fibonacci numbers with given length
-* return by string in json format
+* Create FibService and start it.
 
 ## Future Improvement
 Because of limited schedule and resource, some potential improvements not implemented yet are recorded as follow: 
