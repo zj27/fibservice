@@ -15,7 +15,7 @@ The project is target to implement a web service which support a REST GET call. 
   * Casablanca: asynchronous HTTP client and listener
   * Simple C++ REST library: Very simple and self documenting library for creating a REST API in your c++ application.
 * The gSOAP looks too heavy, the Casabalanca focuses on client and windows, and Simple C++ REST library looks too simple.
-* Restbed is chosen for this project as it exactly meets the requirement and provides necesssary features. It follows Proactor pattern of I/O multiplexing, but simulate that by select/epoll on Linux. So it supports high concurrency.
+* Restbed is chosen for this project as it exactly meets the requirement and provides necesssary features. It follows Proactor pattern of I/O multiplexing, but simulates that by select/epoll on Linux. So it supports high concurrency.
 * Jsoncpp is chosen for json data generating and parsing.
 * Boost::program_options is chosen for parsing the options.
 
