@@ -18,6 +18,13 @@ TEST_CASE("create FibNumbers instance", "[FibNumbers]") {
     // operator=
     REQUIRE_NOTHROW(FibNumbers fib3 = fib1);
     REQUIRE_NOTHROW(fib1 = fib1);
+
+    // Get Number Array
+    fib1.generate(5);
+    FibNumbers fib4(fib1);
+    FibNumbers fib5 = fib1; 
+    REQUIRE(fib1.getNumberArray() == fib4.getNumberArray());
+    REQUIRE(fib1.getNumberArray() == fib5.getNumberArray());
     
 }
 
