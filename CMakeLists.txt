@@ -6,7 +6,7 @@ CMAKE_MINIMUM_REQUIRED( VERSION 2.8.10 )
 # Build Options
 #
 
-OPTION( BUILD_TESTS "Build all available test suites." OFF )
+OPTION( BUILD_TESTS "Build all available test suites." ON )
 
 #
 # Configuration

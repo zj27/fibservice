@@ -34,8 +34,9 @@ class FibNumbers {
 
         Json::Value getNumberArray() { return fib_array;} ;
 
-    private:
         static const unsigned int kFibMaxLength;
+
+    private:
 
         // Directly use Json::Value to store the fibonacci numbers
         // as it works like vector and easy to extend.

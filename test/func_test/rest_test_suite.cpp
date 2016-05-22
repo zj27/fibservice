@@ -6,6 +6,7 @@
 #include <catch.hpp>
 
 #include "test_util.h"
+#include "fibservice.h"
 
 using std::thread;
 using std::shared_ptr;
@@ -18,9 +19,7 @@ using restbed::Http;
 using restbed::Bytes;
 using restbed::Service;
 
-extern void start_service(const shared_ptr< Service >& service,
-                          const unsigned int port,
-                          const unsigned int thread_num);
+using fibservice::FibService;
 
 void verify_request(const string & url,
                     const string & method,
@@ -89,7 +88,8 @@ TEST_CASE("Verify REST request", "[Rest Request]") {
         });
     });
 
-    start_service(service, 1984, 1);
+    FibService fibservice(1984, 1, service);
+    fibservice.start();
     worker->join();
 }
 

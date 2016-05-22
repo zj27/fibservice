@@ -20,7 +20,9 @@ using restbed::Resource;
 using restbed::Settings;
 
 using fibservice::FibNumbers;
-
+using fibservice::kOK;
+using fibservice::kInvalidInput;
+using fibservice::kOutOfRange;
 
 namespace fibservice {
 
@@ -49,16 +51,28 @@ void FibService::get_method_handler(const shared_ptr< Session > session) {
     request->get_query_parameter("num", num, 0);
 
 
-    // Bad request when num is out of range
+    // Bad request when num is invalid
     if (num == 0) {
         session->close(400);
         return;
     }
 
-//    string ret = generate_fibnum_json(num);
 
     FibNumbers fib_nums;
-    fib_nums.generate(num);
+    switch (fib_nums.generate(num)) {
+    case kOK:
+        // do nothing
+        break;
+    case kInvalidInput:
+    case kOutOfRange:
+        session->close(400);
+        return;
+    default:
+        // return 500 for other kinds of error
+        session->close(500);
+        return;
+    }
+
     string ret = fib_nums.toJsonString();
 
     oss.clear();
