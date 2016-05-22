@@ -6,7 +6,7 @@ CMAKE_MINIMUM_REQUIRED( VERSION 2.8.10 )
 # Build Options
 #
 
-OPTION( BUILD_TESTS "Build all available test suites." ON )
+OPTION( BUILD_TESTS "Build all available test suites." OFF )
 
 #
 # Configuration
@@ -34,5 +34,3 @@ IF ( BUILD_TESTS )
 
 ENDIF()
 
-
-#SET(CMAKE_INSTALL_PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/dist)
