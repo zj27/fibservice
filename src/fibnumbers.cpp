@@ -11,14 +11,14 @@ FibNumbers::FibNumbers() {
 }
 
 FibNumbers::FibNumbers(const FibNumbers & rhs) {
-    fib_array = rhs.fib_array;
+    m_fib_array = rhs.m_fib_array;
 }
 
 FibNumbers& FibNumbers::operator=(const FibNumbers& rhs) {
     if (this == &rhs) {
         return *this;
     }
-    fib_array = rhs.fib_array;
+    m_fib_array = rhs.m_fib_array;
     return *this;
 }
 
@@ -36,10 +36,10 @@ FibNumbersErrors FibNumbers::generate(const unsigned int fib_len) {
         return kOutOfRange;
     }
 
-    fib_array.clear();
+    m_fib_array.clear();
 
     try {
-        fib_array.resize(fib_len);
+        m_fib_array.resize(fib_len);
     }
     catch (bad_alloc &) {
         // Failed to alloc for the array
@@ -47,16 +47,16 @@ FibNumbersErrors FibNumbers::generate(const unsigned int fib_len) {
     }
 
     // init the first number 0
-    fib_array[0] = 0;
+    m_fib_array[0] = 0;
 
     if (fib_len > 1) {
         // init the second number 1
-        fib_array[1] = 1;
+        m_fib_array[1] = 1;
         // if fib_len > 2, loop to caculate the rest
         for (int i = 2; i < fib_len; ++i) {
             // Json::Value leverages union to store data of different type
-            fib_array[i] = fib_array[i-1].asUInt64() 
-                           + fib_array[i-2].asUInt64();
+            m_fib_array[i] = m_fib_array[i-1].asUInt64()
+                           + m_fib_array[i-2].asUInt64();
         }
     }
 
@@ -64,7 +64,7 @@ FibNumbersErrors FibNumbers::generate(const unsigned int fib_len) {
 }
 
 string FibNumbers::toJsonString() {
-    return fib_array.toStyledString();
+    return m_fib_array.toStyledString();
 }
 
 }  // namespace fibservice

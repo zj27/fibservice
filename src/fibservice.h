@@ -41,6 +41,11 @@ class FibService {
      void set_threads(const unsigned int threads) { m_threads = threads; }
 
  private:
+     // Forbid copy construct and assignment operator
+     // It's unmeaningful and unsafe to copy a service
+     FibService(const FibService& rhs) = delete;
+     FibService& operator=(const FibService& rhs) = delete;
+
      // Handler for GET method
      static void get_method_handler(const shared_ptr< Session > session);
 

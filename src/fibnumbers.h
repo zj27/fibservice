@@ -40,7 +40,7 @@ class FibNumbers {
      string toJsonString();
 
      // Get the fibonaaci number array
-     Json::Value getNumberArray() {return fib_array;}
+     Json::Value getNumberArray() {return m_fib_array;}
 
      // The max length supported
      static const unsigned int kFibMaxLength;
@@ -48,7 +48,7 @@ class FibNumbers {
  private:
      // Directly use Json::Value to store the fibonacci numbers
      // as it works like vector and easy to extend.
-     Json::Value fib_array;
+     Json::Value m_fib_array;
 };
 
 }  // namespace fibservice
