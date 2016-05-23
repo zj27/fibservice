@@ -1,0 +1,43 @@
+
+FROM ubuntu:16.04
+MAINTAINER fibwebservice
+
+RUN apt-get update
+RUN apt-get install -y git cmake g++-5 libboost-program-options-dev
+
+# check out the source
+RUN cd /root \ 
+    && git clone --recursive https://github.com/zj27/fibservice.git
+
+ENV CXX /usr/bin/g++-5
+
+
+# build and install restbed
+RUN cd /root/fibservice/deps/restbed \ 
+    && mkdir build \
+    && cd build \
+    && cmake -DBUILD_SHARED=YES -DBUILD_SSL=NO -DCMAKE_INSTALL_PREFIX=/root/restbed_dist .. \
+    && make install \
+    && cd /root/restbed_dist \
+    && cp -r include/* /usr/local/include \
+    && cp -r library/* /usr/local/lib
+
+# build and install jsoncpp
+RUN cd /root/fibservice/deps/jsoncpp \
+    && mkdir build \
+    && cd build \
+    && cmake -DBUILD_STATIC_LIBS=OFF -DBUILD_SHARED_LIBS=ON .. \
+    && make install
+
+RUN ldconfig
+
+# build and install fibservice 
+RUN cd /root/fibservice \
+    && mkdir build \
+    && cd build \
+    && cmake .. \
+    && make install 
+
+EXPOSE 1984
+
+# CMD ["fibservice", "-p 1984"]
