@@ -10,20 +10,21 @@ RUN cd /root \
     && git clone --recursive https://github.com/zj27/fibservice.git
 
 ENV CXX /usr/bin/g++-5
-
+ARG service_port=1984
+ARG project_root=/root
 
 # build and install restbed
-RUN cd /root/fibservice/deps/restbed \ 
+RUN cd ${project_root}/fibservice/deps/restbed \ 
     && mkdir build \
     && cd build \
     && cmake -DBUILD_SHARED=YES -DBUILD_SSL=NO -DCMAKE_INSTALL_PREFIX=/root/restbed_dist .. \
     && make install \
-    && cd /root/restbed_dist \
+    && cd ${project_root}/restbed_dist \
     && cp -r include/* /usr/local/include \
     && cp -r library/* /usr/local/lib
 
 # build and install jsoncpp
-RUN cd /root/fibservice/deps/jsoncpp \
+RUN cd ${project_root}/fibservice/deps/jsoncpp \
     && mkdir build \
     && cd build \
     && cmake -DBUILD_STATIC_LIBS=OFF -DBUILD_SHARED_LIBS=ON .. \
@@ -32,12 +33,12 @@ RUN cd /root/fibservice/deps/jsoncpp \
 RUN ldconfig
 
 # build and install fibservice 
-RUN cd /root/fibservice \
+RUN cd ${project_root}/fibservice \
     && mkdir build \
     && cd build \
     && cmake .. \
     && make install 
 
-EXPOSE 1984
+EXPOSE ${service_port}
 
 # CMD ["fibservice", "-p 1984"]
