@@ -10,18 +10,18 @@ MAINTAINER fibwebservice
 RUN apt-get update
 RUN apt-get install -y git cmake g++-5 libboost-program-options-dev
 
-# check out the source
-RUN cd /root \ 
-    && git clone --recursive https://github.com/zj27/fibservice.git
-
 ENV CXX /usr/bin/g++-5
 ARG project_root=/root
+
+# check out the source
+RUN cd ${project_root} \ 
+    && git clone --recursive https://github.com/zj27/fibservice.git
 
 # build and install restbed
 RUN cd ${project_root}/fibservice/deps/restbed \ 
     && mkdir build \
     && cd build \
-    && cmake -DBUILD_SHARED=YES -DBUILD_SSL=NO -DCMAKE_INSTALL_PREFIX=/root/restbed_dist .. \
+    && cmake -DBUILD_SHARED=YES -DBUILD_SSL=NO -DCMAKE_INSTALL_PREFIX=${project_root}/restbed_dist .. \
     && make install \
     && cd ${project_root}/restbed_dist \
     && cp -r include/* /usr/local/include \

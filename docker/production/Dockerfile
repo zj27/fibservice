@@ -30,7 +30,7 @@ RUN cd ${lib_path} \
 
 # the libstdc++ and libpthread is not compatible
 # copy them from devkit as workaround
-RUN rm -f /usr/glibc-compat/lib/libpthread*
+RUN rm -f ${gnu_lib_path}/libpthread*
 COPY ./lib/libstdc++.so.6.0.21 ${gnu_lib_path}
 COPY ./lib/libpthread-2.23.so ${gnu_lib_path}
 RUN ln -s ${gnu_lib_path}/libpthread-2.23.so ${gnu_lib_path}/libpthread.so.0 \
