@@ -37,6 +37,26 @@ Send GET request to get fibonacci numbers:
 curl http://localhost:1984/fibonacci?length=5
 [ 0, 1, 1, 2, 3 ]
 ```
+# Docker
+## Build
+Leverage the build dockerfile to get and build the source.
+Run the container with mounting a host directory to get the build output.
+```
+cd <project_root>/docker/build
+docker build --rm -t fibservice-build ./
+docker run -v /<path>/<to>/<output>:/dist fibservice
+```
+## Deploy
+Put the dockerfile for deployment under build output folder
+Build the docker image which will copy all the binaries and libraries into image.
+Run the container to start fibservice.
+```
+cp <project_root>/docker/deploy/Dockerfile /<path>/<to>/<output>
+cd /<path>/<to>/<output>
+docker build --rm -t fibservice
+docker run -it fibservice [-p <port>] [-t <threads>]
+```
+
 # Documentation
 [Design Doc](docs/design.md)
 
