@@ -1,6 +1,6 @@
-# Dockerfile for fibservice(devkit)
+# Dockerfile to build fibservice
 # Example:
-# docker build -t fibservice-dev ./
+# docker build -t --rm fibservice-dev ./
 # docker run -it fibservice-dev
 
 FROM ubuntu:16.04
@@ -41,6 +41,18 @@ RUN ldconfig
 RUN cd ${project_root}/fibservice \
     && mkdir build \
     && cd build \
-    && cmake .. \
-    && make install 
+    && cmake -DBUILD_TESTS .. \
+    && make install \
+    && make test
 
+# create installation script
+RUN echo "#!/bin/sh
+    mkdir -p /dist/bin;
+    mkdir -p /dist/lib; 
+    cp /usr/local/bin/fibservice  /dist/bin/; 
+    cp -P /usr/local/lib/librestbed.so* ${output_dir}/lib/; 
+    cp -P /usr/local/lib/libjsoncpp.so* ${output_dir}/lib/; 
+    cp -P /usr/local/lib/libboost_program_options.so* ${output_dir}/lib/ " \
+    >> /install.sh &&
+
+CMD ["/install.sh"]
