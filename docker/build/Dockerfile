@@ -1,7 +1,7 @@
 # Dockerfile to build fibservice
 # Example:
 # docker build -t --rm fibservice-dev ./
-# docker run -it fibservice-dev
+# docker run -it -v /<path>/<for>/<output>:/dist fibservice-dev
 
 FROM ubuntu:16.04
 MAINTAINER fibwebservice
@@ -41,18 +41,23 @@ RUN ldconfig
 RUN cd ${project_root}/fibservice \
     && mkdir build \
     && cd build \
-    && cmake -DBUILD_TESTS .. \
+    && cmake -DBUILD_TESTS=ON .. \
     && make install \
     && make test
 
 # create installation script
-RUN echo "#!/bin/sh
-    mkdir -p /dist/bin;
-    mkdir -p /dist/lib; 
-    cp /usr/local/bin/fibservice  /dist/bin/; 
-    cp -P /usr/local/lib/librestbed.so* ${output_dir}/lib/; 
-    cp -P /usr/local/lib/libjsoncpp.so* ${output_dir}/lib/; 
-    cp -P /usr/local/lib/libboost_program_options.so* ${output_dir}/lib/ " \
-    >> /install.sh &&
+# dockerfile COPY couldn't copy symlink
+# to make the deployment dockerfile independent from lib version
+# here we just distribute the .so
+RUN echo "#!/bin/bash" >> /install.sh \
+    && echo "mkdir -p /dist/bin; \
+    mkdir -p /dist/lib; \
+    cp /usr/local/bin/fibservice  /dist/bin/; \
+    cp /usr/local/lib/librestbed.so /dist/lib/; \
+    cp /usr/local/lib/libjsoncpp.so /dist/lib/; \
+    cp /usr/lib/x86_64-linux-gnu/libboost_program_options.so /dist/lib/; \
+    echo Done" \
+    >> /install.sh \
+    && chmod +x /install.sh 
 
 CMD ["/install.sh"]
