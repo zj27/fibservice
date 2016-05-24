@@ -1,7 +1,12 @@
+# Dockerfile for fibservice(devkit)
+# Example:
+# docker build -t fibservice-dev ./
+# docker run -it fibservice-dev
 
 FROM ubuntu:16.04
 MAINTAINER fibwebservice
 
+# install build tool
 RUN apt-get update
 RUN apt-get install -y git cmake g++-5 libboost-program-options-dev
 
@@ -30,6 +35,7 @@ RUN cd ${project_root}/fibservice/deps/jsoncpp \
     && cmake -DBUILD_STATIC_LIBS=OFF -DBUILD_SHARED_LIBS=ON .. \
     && make install
 
+# refresh the ld
 RUN ldconfig
 
 # build and install fibservice 
@@ -39,6 +45,3 @@ RUN cd ${project_root}/fibservice \
     && cmake .. \
     && make install 
 
-EXPOSE ${service_port}
-
-# CMD ["fibservice", "-p 1984"]

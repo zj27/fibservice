@@ -69,6 +69,8 @@ int main(int argc, char** argv) {
         }
     }
 
+    cout << "Starting service on port " << port
+         << " with " << threads << " threads... " << endl;
     FibService fibservice(port, threads);
     fibservice.start();
     return 0;

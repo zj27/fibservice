@@ -1,34 +1,44 @@
+# Dockerfile for fibservice
+# Need make the project and copy 
+# all binary and libraries under ./bin and ./lib
 
-#FROM busybox:glibc
+# Example:
+# docker build -t fibservice ./
+# docker run fibservice -p 1984
+
+# Base OS: alpine with glibc
+# The glibc apk is built by andyshinn
+# https://github.com/andyshinn/alpine-pkg-glibc
 FROM frolvlad/alpine-glibc
-#FROM alpine
 
 MAINTAINER fibservice
 
 ARG bin_path=/usr/local/bin/
-ARG lib_path=/lib/
+ARG lib_path=/usr/local/lib/
+ARG gnu_lib_path=/usr/glibc-compat/lib/
 ARG service_port=1984
 
-
+# copy the project binary and libraries
 COPY ./bin/fibservice ${bin_path}
 COPY ./lib/librestbed.so ${lib_path}
-COPY ./lib/libjsoncpp.so ${lib_path}
+COPY ./lib/libjsoncpp.so.1.7.2 ${lib_path}
 RUN cd ${lib_path} \
-    && ln -s libjsoncpp.so libjsoncpp.so.1 \
-    && ln -s libjsoncpp.so libjsoncpp.so.1.7.2
-COPY ./lib/libboost_program_options.so ${lib_path}
+    && ln -s libjsoncpp.so.1.7.2 libjsoncpp.so.1 \
+    && ln -s libjsoncpp.so.1.7.2 libjsoncpp.so
+COPY ./lib/libboost_program_options.so.1.61.0 ${lib_path}
 RUN cd ${lib_path} \
-    && ln -s libboost_program_options.so libboost_program_options.so.1.61.0 
+    && ln -s libboost_program_options.so.1.61.0 libboost_program_options.so
 
-COPY ./lib/libstdc++.so.6 ${lib_path}
-COPY ./lib/libgccpp.so.1 ${lib_path}
-COPY ./lib/libgcc_s.so.1 ${lib_path}
-COPY ./lib/libpthread.so.0 ${lib_path}
+# the libstdc++ and libpthread is not compatible
+# copy them from devkit as workaround
+RUN rm -f /usr/glibc-compat/lib/libpthread*
+COPY ./lib/libstdc++.so.6.0.21 ${gnu_lib_path}
+COPY ./lib/libpthread-2.23.so ${gnu_lib_path}
+RUN ln -s ${gnu_lib_path}/libpthread-2.23.so ${gnu_lib_path}/libpthread.so.0 \
+    && ln -s ${gnu_lib_path}/libstdc++.so.6.0.21 ${gnu_lib_path}/libstdc++.so.6
 
-RUN apk add --update
-RUN apk --no-cache add ca-certificates
+# refresh the ld
+RUN echo /usr/local/lib >> /usr/glibc-compat/etc/ld.so.conf \
+    && /usr/glibc-compat/sbin/ldconfig
 
-EXPOSE ${service_port}
-
-CMD ["fibservice", "-h"]
-
+ENTRYPOINT ["fibservice"]
