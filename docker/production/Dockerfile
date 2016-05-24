@@ -16,7 +16,6 @@ MAINTAINER fibservice
 ARG bin_path=/usr/local/bin/
 ARG lib_path=/usr/local/lib/
 ARG gnu_lib_path=/usr/glibc-compat/lib/
-ARG service_port=1984
 
 # copy the project binary and libraries
 COPY ./bin/fibservice ${bin_path}

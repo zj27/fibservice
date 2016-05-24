@@ -15,7 +15,6 @@ RUN cd /root \
     && git clone --recursive https://github.com/zj27/fibservice.git
 
 ENV CXX /usr/bin/g++-5
-ARG service_port=1984
 ARG project_root=/root
 
 # build and install restbed
