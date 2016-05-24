@@ -39,10 +39,15 @@ The project is target to implement a web service which support a REST GET call. 
 * Parse and check the option for port and thread numbers. 
 * Create FibService and start it.
 
+### Docker
+This project provides two dockerfiles:
+1. [dev](../docker/dev/Dockerfile): this one is based on Ubuntu. All necessary build tool, dependent libraries will be installed. The source will be cloned, build and install. It could be used as devkit for development or debugging.
+2. [production](../docker/production): this one is based on alpine with glibc. The overall image is very small so it could be used for production.
+
 ## Future Improvement
 Because of limited schedule and resource, some potential improvements not implemented yet are recorded as follow: 
-### Deployment by Docker
-* The service has dependencies on several external libraries, which makes the deployment a little complicated. Container may be leveraged for a quick and simple deployment. All the dependencies could be installed in the container by being specified in the dockerfile. The web service could be built, tested and run in the container.
+### Refine the production dockerfile
+* There were some compatiblity issue for libstdc++ and libpthread on alpine. Currently it copy them from devkit as workaround. A potential improvement is to build own apk for them.
 
 ### Cache
 * The current restbed framework doesn't provide the cache feature. To implement a effecient cache, the cache should store the longest Fibonacci list that have ever queried. If the later request need a shorter list, then directly return from cache. Otherwise, continue the calculation based the list from cache and generate the longer list, and then extend the cache.
