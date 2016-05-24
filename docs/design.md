@@ -41,7 +41,9 @@ The project is target to implement a web service which support a REST GET call. 
 
 ### Docker
 This project provides two dockerfiles:
+
 1. [dev](../docker/dev/Dockerfile): this one is based on Ubuntu. All necessary build tool, dependent libraries will be installed. The source will be cloned, build and install. It could be used as devkit for development or debugging.
+
 2. [production](../docker/production): this one is based on alpine with glibc. The overall image is very small so it could be used for production.
 
 ## Future Improvement
