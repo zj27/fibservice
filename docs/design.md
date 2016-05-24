@@ -49,7 +49,7 @@ This project provides two dockerfiles:
 ## Future Improvement
 Because of limited schedule and resource, some potential improvements not implemented yet are recorded as follow: 
 ### Refine the production dockerfile
-* There were some compatiblity issue for libstdc++ and libpthread on alpine. Currently it copy them from devkit as workaround. A potential improvement is to build own apk for them.
+* There were some compatiblity issue for libstdc++ and libpthread on alpine. Currently it copies them from devkit as workaround. A potential improvement is to build own apk for them.
 
 ### Cache
 * The current restbed framework doesn't provide the cache feature. To implement a effecient cache, the cache should store the longest Fibonacci list that have ever queried. If the later request need a shorter list, then directly return from cache. Otherwise, continue the calculation based the list from cache and generate the longer list, and then extend the cache.
